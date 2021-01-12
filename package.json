@@ -8,14 +8,14 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "building": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "server": "nodemon server.js",
-    "client": "npm start",
+    "client": "npm building",
     "clientinstall": "npm install --prefix gymapp",
-    "runapp": "concurrently \"npm run server\" \"npm run client",
+    "build": "concurrently \"npm run server\" \"npm run client",
     "heroku-build": "npm run build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
