@@ -1,0 +1,328 @@
+<div class="container" *ngIf="currentEmployee">
+  <h2 id="page-heading" style="text-align: center">
+    <button
+      id="jh-create-entity"
+      class="btn btn-info float-left"
+      [routerLink]="['/employee']"
+    >
+      <span class="hidden-sm-down"> Retour </span>
+    </button>
+    <span>
+      {{ currentEmployee.fullName | titlecase }}
+      <button
+        type="button"
+        [routerLink]="['/employeeupdate', currentEmployee.id]"
+        class="btn btn-dark btn-sm"
+      >
+        <span class="material-icons d-none d-md-inline"> edit </span>
+      </button>
+    </span>
+
+    <button
+      *ngIf="changeForm === ''"
+      id="jh-create-entity"
+      class="btn btn-primary float-right"
+      (click)="change(currentEmployee.id)"
+    >
+      <span class="hidden-sm-down"> Ajouté un salaire </span>
+    </button>
+    <button
+      *ngIf="changeForm === currentEmployee.id"
+      id="jh-create-entity"
+      class="btn btn-success float-right"
+      (click)="addSalary(currentEmployee.id)"
+    >
+      <span class="hidden-sm-down"> Validé le salaire </span>
+    </button>
+  </h2>
+  <h3 style="text-align: center">
+    Total rest <br />
+    <span style="font-weight: bold"> {{ currentEmployee.rest }} </span>
+  </h3>
+  <div class="row">
+    <div class="col-sm-12">
+      <form name="searchForm" class="form-inline">
+        <div class="input-group w-100 mt-3">
+          <button
+            *ngIf="changeForm === ''"
+            type="submit"
+            (click)="change('search')"
+            class="btn btn-danger btn-sm"
+          >
+            <span class="d-none d-md-inline"
+              ><span class="material-icons"> search </span></span
+            >
+          </button>
+          <button
+            *ngIf="changeForm === 'search'"
+            type="submit"
+            (click)="
+              change(''); currentsearchMonth = null; currentsearchYear = null
+            "
+            class="btn btn-danger btn-sm"
+          >
+            <span class="d-none d-md-inline"
+              ><span class="material-icons"> search_off </span>></span
+            >
+          </button>
+          <div
+            class="row justify-content-center"
+            *ngIf="changeForm === 'search'"
+          >
+            <div class="col-4">
+              <form name="createForm" role="form">
+                <div class="form-group">
+                  <label class="form-control-label" for="year1">Année</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    id="year1"
+                    name="year1"
+                    [(ngModel)]="currentsearchYear"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-control-label" for="month1">Mois</label>
+                  <select
+                    class="form-control"
+                    name="month1"
+                    [(ngModel)]="currentsearchMonth"
+                    id="month1"
+                  >
+                    <option value="1">JANVIER</option>
+                    <option value="2">FEVRIER</option>
+                    <option value="3">MARS</option>
+                    <option value="4">AVRIL</option>
+                    <option value="5">MAI</option>
+                    <option value="6">JUIN</option>
+                    <option value="7">JUILLET</option>
+                    <option value="8">AOUT</option>
+                    <option value="9">SEPTEMBRE</option>
+                    <option value="10">OCTOBRE</option>
+                    <option value="11">NOVEMBRE</option>
+                    <option value="12">DECEMBRE</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    class="table-responsive"
+    id="entities"
+    style="text-align: center; font-weight: 500"
+  >
+    <div
+      class="row justify-content-center"
+      *ngIf="changeForm === currentEmployee.id"
+    >
+      <div class="col-4">
+        <form [formGroup]="createForm" name="createForm" role="form">
+          <div class="form-group">
+            <label class="form-control-label" for="salary">Montant</label>
+            <input
+              class="form-control"
+              type="number"
+              id="salary"
+              name="salary"
+              formControlName="salary"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-control-label" for="dayCoast"
+              >Cout de la journée</label
+            >
+            <input
+              class="form-control"
+              type="number"
+              id="dayCoast"
+              name="dayCoast"
+              formControlName="dayCoast"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-control-label" for="year">Année</label>
+            <input
+              class="form-control"
+              type="number"
+              id="year"
+              name="year"
+              formControlName="year"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-control-label" for="month">Mois</label>
+            <select
+              class="form-control"
+              name="month"
+              formControlName="month"
+              id="month"
+            >
+              <option value="1">JANVIER</option>
+              <option value="2">FEVRIER</option>
+              <option value="3">MARS</option>
+              <option value="4">AVRIL</option>
+              <option value="5">MAI</option>
+              <option value="6">JUIN</option>
+              <option value="7">JUILLET</option>
+              <option value="8">AOUT</option>
+              <option value="9">SEPTEMBRE</option>
+              <option value="10">OCTOBRE</option>
+              <option value="11">NOVEMBRE</option>
+              <option value="12">DECEMBRE</option>
+            </select>
+          </div>
+        </form>
+      </div>
+    </div>
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>Année</span></th>
+          <th scope="col"><span>Mois</span></th>
+          <th scope="col"><span>Salaire</span></th>
+          <th scope="col"><span>Entrée Moyenne</span></th>
+          <th scope="col"><span>Sortie Moyenne</span></th>
+          <th scope="col"><span>Temps Moyen</span></th>
+          <th scope="col"><span>Avance</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let salary of allSalarys
+              | customerFilter: currentsearchMonth:currentsearchYear
+          "
+          style="cursor: pointer"
+          class="m-0"
+        >
+          <td>{{ salary.year }}</td>
+          <td>{{ checkMonth(salary.month) }}</td>
+          <td>{{ salary.salary }}</td>
+          <td>{{ checkEntMoy(salary) }}</td>
+          <td>{{ checkSorMoy(salary) }}</td>
+          <td>{{ checkResMoy(salary) }}</td>
+          <td *ngIf="salary.avances">
+            <div
+              style="overflow-y: auto; overflow-x: hidden; max-height: 100px"
+            >
+              <div *ngFor="let avance of salary.avances" class="row p-1">
+                <div class="col-8">
+                  <div *ngIf="avance.note == null">
+                    <span> {{ avance.amount }} Dt </span>
+                    <span> le </span>
+                    <span>
+                      {{ avance.date | date: "dd LLLL yyyy HH:mm" }}
+                    </span>
+                  </div>
+                  <div *ngIf="avance.note !== null">
+                    <span>{{ avance.note }} </span>
+                    <span *ngIf="avance.date"
+                      >le {{ avance.date | date: "dd LLLL yyyy" }}</span
+                    >
+                  </div>
+                </div>
+                <div class="col-2">
+                  <button
+                    *ngIf="
+                      userLogedIn.role === 'SUPERADMIN' ||
+                      userLogedIn.role === 'ADMIN'
+                    "
+                    type="submit"
+                    (click)="deleteAvance(avance.id)"
+                    class="btn btn-danger btn-sm"
+                  >
+                    <span class="d-none d-md-inline"
+                      ><span class="material-icons"> delete </span></span
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <td class="text-right">
+            <div class="btn-group">
+              <div *ngIf="changeForm === salary.id" class="container-fluid row">
+                <div class="col-9">
+                  <input
+                    placeholder="Montant"
+                    type="number"
+                    [(ngModel)]="avanceToAdd"
+                    style="max-width: 100px"
+                  />
+                  <input
+                    placeholder="Remarque"
+                    type="text"
+                    [(ngModel)]="theDescription"
+                    style="max-width: 100px"
+                  />
+                </div>
+                <div class="col-3">
+                  <button
+                    type="submit"
+                    (click)="addAvance(salary)"
+                    class="btn btn-success btn-sm"
+                  >
+                    <span class="d-none d-md-inline"
+                      ><span class="material-icons"> check </span></span
+                    >
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="changeForm === '' || changeForm !== salary.id">
+                <button
+                  type="submit"
+                  (click)="change(salary.id)"
+                  class="btn btn-success btn-sm"
+                >
+                  <span class="d-none d-md-inline"
+                    ><span class="material-icons"> monetization_on </span></span
+                  >
+                </button>
+                <button
+                  *ngIf="
+                    userLogedIn.role === 'SUPERADMIN' ||
+                    userLogedIn.role === 'ADMIN'
+                  "
+                  type="submit"
+                  (click)="deleteSalarys(currentEmployee.id, salary.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <span class="d-none d-md-inline"
+                    ><span class="material-icons"> delete </span></span
+                  >
+                </button>
+              </div>
+            </div>
+            <div *ngIf="changeForm === '' || changeForm !== salary.id">
+              <button
+                type="submit"
+                (click)="dayoffPlus('plus', salary.id)"
+                class="btn btn-dark btn-sm"
+              >
+                <span class="d-none d-md-inline"
+                  ><span class="material-icons"> arrow_circle_up </span></span
+                >
+              </button>
+              <button
+                type="submit"
+                (click)="dayoffPlus('moin', salary.id)"
+                class="btn btn-dark btn-sm"
+              >
+                <span class="d-none d-md-inline"
+                  ><span class="material-icons"> arrow_circle_down </span></span
+                >
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

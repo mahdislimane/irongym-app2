@@ -1,0 +1,114 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form
+      name="createForm"
+      role="form"
+      novalidate
+      (ngSubmit)="save()"
+      [formGroup]="createForm"
+    >
+      <h2 id="jhi-abonnement-heading">
+        Crée un abonnement pour
+        <span *ngIf="currentAbonne">{{
+          currentAbonne.firstName + " " + currentAbonne.lastName
+        }}</span>
+      </h2>
+
+      <div>
+        <div class="form-group">
+          <label class="form-control-label" for="field_departement"
+            >Departement</label
+          >
+          <select
+            class="form-control"
+            name="departement"
+            formControlName="departement"
+            id="field_departement"
+          >
+            <option value="MUSCULATION">MUSCULATION</option>
+            <option value="MUSCULATIONAG">MUSCULATION(Aymen Ghribi)</option>
+            <option value="MUSCULATIONAC">MUSCULATION(Autre Coach)</option>
+            <option value="KICKBOXING">KICKBOXING</option>
+            <option value="TAEKWONDO">TAEKWONDO</option>
+            <option value="BOX">BOX</option>
+            <option value="DANCE">DANCE</option>
+            <option value="GYMNASTIQUE">GYMNASTIQUE</option>
+            <option value="KARATE">KARATE</option>
+            <option value="JIUJITSU">JIUJITSU</option>
+            <option value="JUDO">JUDO</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-control-label" for="field_abType"
+            >Durée de l'abonnement</label
+          >
+          <select
+            class="form-control"
+            name="abType"
+            formControlName="abType"
+            id="field_abType"
+          >
+            <option value="SEANCE">SEANCE</option>
+            <option value="1 SEMAINE">1 SEMAINE</option>
+            <option value="2 SEMAINE">2 SEMAINE</option>
+            <option value="1 MOIS">1 MOIS</option>
+            <option value="2 MOIS">2 MOIS</option>
+            <option value="3 MOIS">3 MOIS</option>
+            <option value="6 MOIS">6 MOIS</option>
+            <option value="AN">AN</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-control-label" for="field_price">Prix</label>
+          <input
+            type="number"
+            class="form-control"
+            id="field_price"
+            name="price"
+            formControlName="price"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-control-label" for="field_pay">Montant payé</label>
+          <input
+            type="number"
+            class="form-control"
+            id="field_pay"
+            name="pay"
+            formControlName="pay"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-control-label" for="field_date">date</label>
+          <input
+            type="datetime-local"
+            class="form-control"
+            id="field_date"
+            name="date"
+            formControlName="date"
+          />
+        </div>
+      </div>
+
+      <div *ngIf="currentAbonne">
+        <button
+          type="button"
+          [routerLink]="['/abonnedetail/' + currentAbonne.id]"
+          id="cancel-save"
+          class="btn btn-secondary"
+        >
+          <span class="material-icons">backspace</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          [disabled]="createForm.invalid"
+          class="btn btn-primary"
+        >
+          <span class="material-icons">save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,264 @@
+<div class="container">
+  <h2 id="page-heading">
+    <span>Abonnés</span>
+
+    <button
+      id="jh-create-entity"
+      class="btn btn-primary float-right jh-create-entity create-abonnement"
+      [routerLink]="['/abonnecreate']"
+    >
+      <span class="hidden-sm-down"> Crée un abonné </span>
+    </button>
+  </h2>
+  <div
+    *ngIf="userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'"
+  >
+    <button
+      *ngIf="searchUser === null"
+      type="submit"
+      (click)="change('0+01234')"
+      class="btn btn-dark btn-sm"
+    >
+      <span class="d-none d-md-inline"> Chercher un abonné </span>
+    </button>
+    <button
+      *ngIf="searchUser === '0+01234'"
+      type="submit"
+      (click)="change(null)"
+      class="btn btn-dark btn-sm"
+    >
+      <span class="d-none d-md-inline">
+        Chercher par utilisateur connecter
+      </span>
+    </button>
+    <p class="p-0 m-0">
+      Nombre d'abonnées :
+      {{ abLength(allAbonnes | customerFilter: currentsearch:searchUser) }}
+    </p>
+    <p class="p-0 m-0">
+      Crédit total :
+      {{ abCredit(allAbonnes | customerFilter: currentsearch:searchUser) }} dt
+    </p>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <form name="searchForm" class="form-inline">
+        <div class="input-group w-100 mt-3">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="currentsearch"
+            id="currentSearch"
+            name="currentSearch"
+            placeholder="search..."
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    class="table-responsive"
+    style="text-align: center; font-weight: 500"
+    id="entities"
+  >
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>Nom</span></th>
+          <th scope="col"><span>Prénom</span></th>
+          <th
+            scope="col"
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            <span>Téléphone</span>
+          </th>
+          <th scope="col"><span>Crédit</span></th>
+          <th scope="col"><span>Type</span></th>
+          <th scope="col"><span>Durée</span></th>
+          <th scope="col"><span>Date</span></th>
+          <th
+            scope="col"
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            <span>Crée par</span>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let abonne of allAbonnes | customerFilter: currentsearch:searchUser;
+            let i = index
+          "
+          style="cursor: pointer"
+          class="m-0"
+        >
+          <td
+            *ngIf="
+              (allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+              6
+            "
+          >
+            {{ abonne.lastName | uppercase }}
+          </td>
+          <td
+            *ngIf="
+              (allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+              6
+            "
+          >
+            {{ abonne.firstName | uppercase }}
+          </td>
+          <td
+            *ngIf="
+              ((allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+                6 &&
+                userLogedIn.role === 'SUPERADMIN') ||
+              userLogedIn.role === 'ADMIN'
+            "
+          >
+            <span>{{ abonne.phoneNumber }}</span>
+          </td>
+          <div
+            *ngIf="
+              (allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+              6
+            "
+            [className]="abonne.credit > 0 ? 'fini' : 'encours'"
+          >
+            <td>{{ abonne.credit }}</td>
+          </div>
+          <td
+            *ngIf="
+              (allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+              6
+            "
+          >
+            <span *ngIf="abonne?.abonnements[0]">
+              {{
+                abonne?.abonnements[abLength(abonne?.abonnements) - 1]
+                  .departement
+              }}
+            </span>
+          </td>
+          <td
+            *ngIf="
+              (allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+              6
+            "
+          >
+            <span *ngIf="abonne?.abonnements[0]">
+              {{
+                abonne?.abonnements[abLength(abonne?.abonnements) - 1].abType
+              }}
+            </span>
+          </td>
+          <div
+            *ngIf="
+              (allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+              6
+            "
+            [className]="
+              verfieDate(abonne?.abonnements[abLength(abonne?.abonnements) - 1])
+            "
+          >
+            <td>
+              <span *ngIf="abonne?.abonnements[0]">{{
+                abonne?.abonnements[abLength(abonne?.abonnements) - 1]?.date
+                  | date: "dd LLLL yyyy"
+              }}</span>
+            </td>
+          </div>
+          <td
+            *ngIf="
+              (allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+              6
+            "
+          >
+            <span
+              *ngIf="
+                userLogedIn.role === 'SUPERADMIN' ||
+                userLogedIn.role === 'ADMIN'
+              "
+              >{{ abonne.userLogedIn }}</span
+            >
+          </td>
+
+          <td
+            *ngIf="
+              (allAbonnes | customerFilter: currentsearch:searchUser).length -
+                i <
+              6
+            "
+            class="text-right"
+          >
+            <div class="btn-group">
+              <button
+                type="button"
+                (click)="
+                  addPres(
+                    abonne.id,
+                    abonne?.abonnements[abLength(abonne?.abonnements) - 1]?.id
+                  )
+                "
+                class="btn btn-success btn-sm"
+              >
+                <span class="d-none d-md-inline"
+                  ><span class="material-icons"> present_to_all </span></span
+                >
+              </button>
+              <button
+                type="button"
+                [routerLink]="['/abonnedetail/' + abonne.id]"
+                class="btn btn-info btn-sm"
+              >
+                <span class="material-icons d-none d-md-inline">
+                  pageview
+                </span>
+              </button>
+              <button
+                *ngIf="
+                  userLogedIn.role === 'SUPERADMIN' ||
+                  userLogedIn.role === 'ADMIN'
+                "
+                type="button"
+                [routerLink]="['/abonneupdate', abonne.id]"
+                class="btn btn-primary btn-sm"
+              >
+                <span class="material-icons d-none d-md-inline"> edit </span>
+              </button>
+
+              <button
+                *ngIf="
+                  userLogedIn.role === 'SUPERADMIN' ||
+                  userLogedIn.role === 'ADMIN'
+                "
+                type="button"
+                (click)="deleteUser(abonne.id)"
+                class="btn btn-danger btn-sm"
+              >
+                <span class="d-none d-md-inline"
+                  ><span class="material-icons"> delete </span></span
+                >
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,304 @@
+<div class="container-fluid row" style="text-align: center">
+  <div
+    class="col-12 m-2"
+    *ngIf="userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'"
+  >
+    <button
+      class="btn btn-dark"
+      (click)="changedepChangeForm('change')"
+      *ngIf="depChangeForm === ''"
+    >
+      Ajouté une dépense
+    </button>
+    <button
+      class="btn btn-success"
+      (click)="addDepense()"
+      *ngIf="depChangeForm === 'change'"
+    >
+      Validé la dépense
+    </button>
+    <div style="text-align: center" *ngIf="depChangeForm === 'change'">
+      <input
+        placeholder="Montant"
+        type="number"
+        [(ngModel)]="payToAdd"
+        style="max-width: 100px"
+      /><br />
+      <input
+        placeholder="Remarque"
+        type="text"
+        [(ngModel)]="theDescription"
+        style="max-width: 200px; height: 50px"
+      />
+    </div>
+  </div>
+  <div class="col-12 p-3">
+    <div class="row">
+      <div class="col-12" style="min-height: 200px; width: 100%">
+        <span class="center">
+          <h1 style="font-weight: bold; font-size: x-large">Pointage</h1></span
+        >
+        <div class="row">
+          <div class="col-6">
+            <span class="center">
+              <span class="material-icons"> person_off </span>
+            </span>
+            <div class="container row">
+              <tr class="col-auto p-1" *ngFor="let employee of allEmployees">
+                <td
+                  class="btn btn-danger left-align"
+                  style="display: flex"
+                  *ngIf="employee.state == 'out'"
+                  (click)="addEntExt(employee.id)"
+                >
+                  {{ employee.fullName | uppercase }}
+                </td>
+              </tr>
+            </div>
+          </div>
+          <div class="col-6">
+            <span class="center">
+              <span class="material-icons"> person </span>
+            </span>
+            <div class="container row">
+              <tr class="col-auto p-1" *ngFor="let employee of allEmployees">
+                <td
+                  class="btn btn-success right-align"
+                  style="display: flex"
+                  *ngIf="employee.state == 'in'"
+                  (click)="addEntExt(employee.id)"
+                >
+                  {{ employee.fullName | uppercase }}
+                </td>
+              </tr>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <form name="searchForm" class="form-inline">
+          <div class="input-group w-100 mt-3">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="produit"
+              id="produit"
+              name="produit"
+            />
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="prix"
+              id="prix"
+              name="prix"
+            />
+            <button class="btn btn-info" (click)="addBuvette()">OK</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      class="table-responsive"
+      style="
+        text-align: center;
+        font-weight: 500;
+        overflow: auto;
+        max-height: 400px;
+      "
+      id="entities"
+    >
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              *ngIf="
+                userLogedIn.role === 'SUPERADMIN' ||
+                userLogedIn.role === 'ADMIN'
+              "
+            >
+              <span>Vendeur</span>
+            </th>
+            <th scope="col"><span>Date</span></th>
+            <th scope="col"><span>Produit</span></th>
+            <th scope="col"><span>Prix</span></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let buvette of allBuvette; let i = index"
+            style="cursor: pointer"
+            class="m-0"
+          >
+            <td
+              *ngIf="
+                userLogedIn.role === 'SUPERADMIN' ||
+                userLogedIn.role === 'ADMIN'
+              "
+            >
+              {{ buvette.userName }}
+            </td>
+            <td>{{ buvette.date | date: "dd LLLL yyyy HH:mm" }}</td>
+            <td>{{ buvette.comment }}</td>
+            <td>{{ buvette.price }}</td>
+            <td>
+              <div class="btn-group">
+                <button
+                  type="button"
+                  (click)="deleteBuvette(buvette)"
+                  class="btn btn-success btn-sm"
+                >
+                  <span class="d-none d-md-inline">
+                    <span class="material-icons"> check_circle_outline </span>
+                  </span>
+                </button>
+                <button
+                  *ngIf="
+                    userLogedIn.role === 'SUPERADMIN' ||
+                    userLogedIn.role === 'ADMIN'
+                  "
+                  type="button"
+                  (click)="delBuv(buvette)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <span class="d-none d-md-inline">
+                    <span class="material-icons"> delete_forever </span>
+                  </span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="col-6 p-3"
+    *ngIf="userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'"
+  >
+    <div class="row">
+      <div class="col-sm-12">
+        <form name="searchForm" class="form-inline">
+          <div class="input-group w-100 mt-3">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="currentsearch"
+              id="currentSearch"
+              name="currentSearch"
+              placeholder="search..."
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      class="table-responsive boxStyle"
+      style="text-align: center; font-weight: 500"
+      id="entities"
+    >
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr>
+            <th scope="col"><span>fullName</span></th>
+            <th scope="col"><span>phoneNumber</span></th>
+            <th scope="col"><span>Rest</span></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let employee of allEmployees | customerFilter: currentsearch
+            "
+            style="cursor: pointer"
+            class="m-0"
+          >
+            <td>{{ employee.fullName | uppercase }}</td>
+            <td>{{ employee.phoneNumber }}</td>
+            <td>{{ employee.rest }}</td>
+            <td class="text-right">
+              <div class="btn-group">
+                <div *ngIf="changeForm === employee.id" class="row">
+                  <div class="col-9" style="text-align: center">
+                    Montant
+                    <input
+                      type="number"
+                      [(ngModel)]="payToAdd"
+                      style="max-width: 50px"
+                    />
+                    Remarque
+                    <input
+                      type="text"
+                      [(ngModel)]="theDescription"
+                      style="max-width: 100px"
+                    />
+                  </div>
+                  <div class="col-3">
+                    <button
+                      type="submit"
+                      (click)="addAvance(employee)"
+                      class="btn btn-success btn-sm"
+                    >
+                      <span class="d-none d-md-inline"
+                        ><span class="material-icons"> check </span></span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="changeForm === '' || changeForm !== employee.id">
+                  <button
+                    *ngIf="employee.salarys !== []"
+                    type="submit"
+                    (click)="change(employee.id)"
+                    class="btn btn-success btn-sm"
+                  >
+                    <span class="d-none d-md-inline"
+                      ><span class="material-icons">
+                        monetization_on
+                      </span></span
+                    >
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="col-6 p-3"
+    *ngIf="userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'"
+  >
+    <table class="table table-striped mt-5">
+      <thead>
+        <tr>
+          <th scope="col"><span>Entrée du jours</span></th>
+          <th scope="col"><span>Sortie du jours</span></th>
+          <th scope="col"><span>Etat du jours</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            {{ calcul(allIncomes | customerFilter: nowMonth:nowYear:nowDay) }}
+            dt
+          </td>
+          <td>
+            {{ calcul(allOutcomes | customerFilter: nowMonth:nowYear:nowDay) }}
+            dt
+          </td>
+          <td>
+            {{
+              calcul(allIncomes | customerFilter: nowMonth:nowYear:nowDay) -
+                calcul(allOutcomes | customerFilter: nowMonth:nowYear:nowDay)
+            }}
+            dt
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

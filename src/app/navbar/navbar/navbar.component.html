@@ -1,0 +1,118 @@
+<div class="row">
+  <div class="col-12">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" style="cursor: pointer">IRON GYM</a>
+
+      <div class="navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN' ||
+              userLogedIn.role === 'USER'
+            "
+            class="nav-item active"
+          >
+            <button class="nav-link btn btn-done" [routerLink]="['/']">
+              Home <span class="sr-only">(current)</span>
+            </button>
+          </li>
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+            class="nav-item active"
+          >
+            <button class="nav-link btn btn-done" [routerLink]="['/user']">
+              Utilisateurs <span class="sr-only">(current)</span>
+            </button>
+          </li>
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN' ||
+              userLogedIn.role === 'USER'
+            "
+            class="nav-item active"
+          >
+            <button class="nav-link btn btn-done" [routerLink]="['/abonne']">
+              Abonnés <span class="sr-only">(current)</span>
+            </button>
+          </li>
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN' ||
+              userLogedIn.role === 'USER'
+            "
+            class="nav-item active"
+          >
+            <button class="nav-link btn btn-done" [routerLink]="['/employee']">
+              Employées <span class="sr-only">(current)</span>
+            </button>
+          </li>
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+            class="nav-item active"
+          >
+            <button class="nav-link btn btn-done" [routerLink]="['/caisse']">
+              Caisse <span class="sr-only">(current)</span>
+            </button>
+          </li>
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+            class="nav-item active"
+          >
+            <button
+              class="nav-link btn btn-done"
+              [routerLink]="['/abonnementcaisse']"
+            >
+              Abonnements <span class="sr-only">(current)</span>
+            </button>
+          </li>
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+            class="nav-item active"
+          >
+            <button class="nav-link btn btn-done" [routerLink]="['/presence']">
+              Statistiques <span class="sr-only">(current)</span>
+            </button>
+          </li>
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+            class="nav-item active"
+          >
+            <button class="nav-link btn btn-done" [routerLink]="['/courbe']">
+              Courbe <span class="sr-only">(current)</span>
+            </button>
+          </li>
+          <li
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN' ||
+              userLogedIn.role === 'USER'
+            "
+            class="nav-item active"
+          >
+            <button class="nav-link btn btn-danger" (click)="deconnexion()">
+              Déconnexion <span class="sr-only">(current)</span>
+            </button>
+          </li>
+        </ul>
+        <span class="navbar-brand float-right">
+          <span *ngIf="userLogedIn.firstName">
+            {{ userLogedIn.firstName + " " + userLogedIn.lastName | titlecase }}
+          </span>
+        </span>
+      </div>
+    </nav>
+  </div>
+</div>

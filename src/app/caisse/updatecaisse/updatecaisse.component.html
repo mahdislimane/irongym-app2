@@ -1,0 +1,240 @@
+<div class="container">
+  <h2 id="page-heading">
+    <span>Abonnements</span>
+  </h2>
+
+  <div class="container-fluid row">
+    <form name="searchForm" class="form-inline container-fluid row">
+      <div class="col-4 float-left">
+        <button
+          class="btn btn-dark"
+          style="width: 200px; margin-bottom: 2px"
+          (click)="checkCredit('abonnements')"
+        >
+          <span>Abonnements</span>
+        </button>
+        <br />
+        <button
+          class="btn btn-dark"
+          style="width: 200px; margin-bottom: 2px"
+          (click)="checkCredit('creditMois')"
+        >
+          <span>Crédits du mois</span></button
+        ><br />
+        <button
+          class="btn btn-dark"
+          style="width: 200px; margin-bottom: 2px"
+          (click)="checkCredit('abonnementsMois')"
+        >
+          <span>Abonnements du mois</span></button
+        ><br />
+        <button
+          class="btn btn-dark"
+          style="width: 200px; margin-bottom: 2px"
+          (click)="checkCredit('presence')"
+        >
+          <span>Présences</span>
+        </button>
+      </div>
+      <div class="col-4">
+        <table>
+          <tr>
+            <td>Nombre d'abonnées</td>
+            <td>
+              :
+              {{
+                abLength(
+                  allAbonnements
+                    | abonnementFilter
+                      : currentsearchYear
+                      : currentsearchMonth
+                      : currentsearchDay
+                      : currentsearch
+                      : currentsearchDepartement
+                      : searchCredit
+                )
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>Total Crédit</td>
+            <td>
+              :
+              {{
+                abCredit(
+                  allAbonnements
+                    | abonnementFilter
+                      : currentsearchYear
+                      : currentsearchMonth
+                      : currentsearchDay
+                      : currentsearch
+                      : currentsearchDepartement
+                      : searchCredit
+                )
+              }}
+              dt
+            </td>
+          </tr>
+          <tr *ngIf="searchCredit !== 'presence'">
+            <td>Total payée</td>
+            <td>
+              :
+              {{
+                abPay(
+                  allAbonnements
+                    | abonnementFilter
+                      : currentsearchYear
+                      : currentsearchMonth
+                      : currentsearchDay
+                      : currentsearch
+                      : currentsearchDepartement
+                      : searchCredit
+                )
+              }}
+              dt
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-4 float-right">
+        <form>
+          <div class="form-group container-fluid row">
+            <label class="form-control-label col-4" for="year">Année</label>
+            <input
+              class="form-control col-8"
+              type="number"
+              id="year"
+              name="year"
+              [(ngModel)]="currentsearchYear"
+            />
+          </div>
+          <div class="form-group container-fluid row">
+            <label class="form-control-label col-4" for="month">Mois</label>
+            <select
+              class="form-control col-8"
+              name="month"
+              [(ngModel)]="currentsearchMonth"
+              id="month"
+            >
+              <option value="1">JANVIER</option>
+              <option value="2">FEVRIER</option>
+              <option value="3">MARS</option>
+              <option value="4">AVRIL</option>
+              <option value="5">MAI</option>
+              <option value="6">JUIN</option>
+              <option value="7">JUILLET</option>
+              <option value="8">AOUT</option>
+              <option value="9">SEPTEMBRE</option>
+              <option value="10">OCTOBRE</option>
+              <option value="11">NOVEMBRE</option>
+              <option value="12">DECEMBRE</option>
+            </select>
+          </div>
+          <div class="form-group container-fluid row">
+            <label class="form-control-label col-4" for="day">Jours</label>
+            <input
+              class="form-control col-8"
+              type="number"
+              id="day"
+              name="day"
+              [(ngModel)]="currentsearchDay"
+            />
+          </div>
+          <div class="form-group container-fluid row">
+            <label class="form-control-label col-4" for="field_departement"
+              >Departement</label
+            >
+            <select
+              class="form-control col-8"
+              name="departement"
+              [(ngModel)]="currentsearchDepartement"
+              id="field_departement"
+            >
+              <option value="Tout">Tout</option>
+              <option value="MUSCULATION">MUSCULATION</option>
+              <option value="MUSCULATIONAG">MUSCULATION(Aymen Ghribi)</option>
+              <option value="MUSCULATIONAC">MUSCULATION(Autre Coach)</option>
+              <option value="KICKBOXING">KICKBOXING</option>
+              <option value="TAEKWONDO">TAEKWONDO</option>
+              <option value="BOX">BOX</option>
+              <option value="DANCE">DANCE</option>
+              <option value="GYMNASTIQUE">GYMNASTIQUE</option>
+              <option value="KARATE">KARATE</option>
+              <option value="JIUJITSU">JIUJITSU</option>
+              <option value="JUDO">JUDO</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="input-group w-100 mt-3">
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="currentsearch"
+          id="currentSearch"
+          name="currentSearch"
+          placeholder="search..."
+        />
+      </div>
+    </form>
+  </div>
+
+  <div
+    class="table-responsive"
+    id="entities"
+    style="text-align: center; font-weight: 500"
+  >
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>Nom et prénom</span></th>
+          <th scope="col"><span>crédit</span></th>
+          <th scope="col"><span>Département</span></th>
+          <th scope="col"><span>Type</span></th>
+          <th scope="col"><span>prix</span></th>
+          <th scope="col"><span>Payer</span></th>
+          <th scope="col"><span>Date</span></th>
+          <th scope="col"><span>Crée par</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let abonne of allAbonnements
+              | abonnementFilter
+                : currentsearchYear
+                : currentsearchMonth
+                : currentsearchDay
+                : currentsearch
+                : currentsearchDepartement
+                : searchCredit
+          "
+        >
+          <td>{{ abonne.fullName | uppercase }}</td>
+          <td>{{ abonne.credit }}</td>
+          <td>{{ abonne.departement }}</td>
+          <td>{{ abonne.type }}</td>
+          <td>{{ abonne.price }}</td>
+          <td>{{ abonne.pay }}</td>
+          <td>{{ abonne.date | date: "dd LLLL yyyy" }}</td>
+          <td>{{ abonne.userLogedIn }}</td>
+
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                (click)="deleteAbonnement(abonne.idAbonne, abonne.idAbonnement)"
+                class="btn btn-danger btn-sm"
+              >
+                <span class="d-none d-md-inline"
+                  ><span class="material-icons"> delete </span></span
+                >
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

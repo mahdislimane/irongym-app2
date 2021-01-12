@@ -1,0 +1,17 @@
+.fini {
+    color: red;
+    display: flex;
+    justify-content: center;
+}
+
+.encours {
+    color: black;
+    display: flex;
+    justify-content: center;
+}
+
+.dateProche {
+    color: orange;
+    display: flex;
+    justify-content: center;
+}

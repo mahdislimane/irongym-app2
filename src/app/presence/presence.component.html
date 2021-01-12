@@ -1,0 +1,477 @@
+<div class="container">
+  <h2 id="page-heading">Statistiques</h2>
+  <div class="m-3">
+    <div class="float-left">
+      <button
+        class="btn btn-dark"
+        style="width: 200px; margin-bottom: 2px"
+        (click)="changeform('TOUT')"
+      >
+        Timer</button
+      ><br />
+      <button
+        class="btn btn-dark"
+        style="width: 200px; margin-bottom: 2px"
+        (click)="changeform('EMPLOYEE')"
+      >
+        Employées</button
+      ><br />
+      <button
+        class="btn btn-dark"
+        style="width: 200px; margin-bottom: 2px"
+        (click)="changeform('ABONNEMENTS')"
+      >
+        Abonnements</button
+      ><br />
+      <button
+        class="btn btn-dark"
+        style="width: 200px; margin-bottom: 2px"
+        (click)="changeform('INOUTCOME')"
+      >
+        Entré Sortie
+      </button>
+    </div>
+    <div class="col-4 float-right">
+      <form>
+        <div class="form-group container-fluid row">
+          <label class="form-control-label col-4" for="year">Année</label>
+          <input
+            class="form-control col-8"
+            type="number"
+            id="year"
+            name="year"
+            [(ngModel)]="currentsearchYear"
+          />
+        </div>
+        <div class="form-group container-fluid row">
+          <label class="form-control-label col-4" for="month">Mois</label>
+          <select
+            class="form-control col-8"
+            name="month"
+            [(ngModel)]="currentsearchMonth"
+            id="month"
+          >
+            <option value="1">JANVIER</option>
+            <option value="2">FEVRIER</option>
+            <option value="3">MARS</option>
+            <option value="4">AVRIL</option>
+            <option value="5">MAI</option>
+            <option value="6">JUIN</option>
+            <option value="7">JUILLET</option>
+            <option value="8">AOUT</option>
+            <option value="9">SEPTEMBRE</option>
+            <option value="10">OCTOBRE</option>
+            <option value="11">NOVEMBRE</option>
+            <option value="12">DECEMBRE</option>
+          </select>
+        </div>
+        <div
+          class="form-group container-fluid row"
+          *ngIf="
+            formChange !== 'EMPLOYEE' &&
+            formChange !== 'TOUT' &&
+            formChange !== 'INOUTCOME'
+          "
+        >
+          <label class="form-control-label col-4" for="field_departement"
+            >Departement</label
+          >
+          <select
+            class="form-control col-8"
+            name="departement"
+            [(ngModel)]="currentsearchDepartement"
+            id="field_departement"
+          >
+            <option value="Tout">Tout</option>
+            <!-- <option value="RECEPTION">RECEPTION</option>
+                     <option value="MENAGE">MENAGE</option>
+                     <option value="COACH">COACH</option> -->
+            <option value="MUSCULATION">MUSCULATION</option>
+            <option value="MUSCULATIONAG">MUSCULATION(Aymen Ghribi)</option>
+            <option value="MUSCULATIONAC">MUSCULATION(Autre Coach)</option>
+            <option value="KICKBOXING">KICKBOXING</option>
+            <option value="TAEKWONDO">TAEKWONDO</option>
+            <option value="BOX">BOX</option>
+            <option value="DANCE">DANCE</option>
+            <option value="GYMNASTIQUE">GYMNASTIQUE</option>
+            <option value="KARATE">KARATE</option>
+            <option value="JIUJITSU">JIUJITSU</option>
+            <option value="JUDO">JUDO</option>
+          </select>
+        </div>
+        <div
+          class="form-group container-fluid row"
+          *ngIf="formChange === 'EMPLOYEE' || formChange === 'TOUT'"
+        >
+          <label class="form-control-label col-4" for="field_departement"
+            >Employées</label
+          >
+          <select
+            class="form-control col-8"
+            name="departement"
+            [(ngModel)]="currentsearchEmployee"
+            id="field_departement"
+          >
+            <option value="Tout les employées" *ngIf="!moyDaily">
+              Tout les employées
+            </option>
+            <option *ngFor="let empl of allEmployeeName" value="{{ empl }}">
+              {{ empl }}
+            </option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div
+    class="table-responsive"
+    id="entities"
+    style="text-align: center; font-weight: 500"
+  >
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th
+            scope="col"
+            *ngIf="formChange == 'EMPLOYEE' || formChange == 'INOUTCOME'"
+          >
+            <span>Salaire</span>
+          </th>
+          <th
+            scope="col"
+            *ngIf="formChange == 'EMPLOYEE' || formChange == 'INOUTCOME'"
+          >
+            <span>Avances</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'EMPLOYEE'">
+            <span>Nombre d'avances</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'TOUT'">Nom et prénom</th>
+          <th scope="col" *ngIf="formChange == 'TOUT'">
+            <span *ngIf="!moyDaily">Entrée Moyenne</span>
+            <span *ngIf="moyDaily">Entrée</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'TOUT'">
+            <span *ngIf="!moyDaily">Sortie Moyenne</span>
+            <span *ngIf="moyDaily">Sortie</span>
+          </th>
+          <th
+            scope="col"
+            *ngIf="formChange == 'TOUT' || formChange == 'EMPLOYEE'"
+          >
+            <span *ngIf="!moyDaily">Temps Moyen</span>
+            <span *ngIf="moyDaily">Temps</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'ABONNEMENTS'">
+            <span>Abonnements</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'ABONNEMENTS'">
+            <span>Abonnés</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'ABONNEMENTS'">
+            <span>Présence</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'ABONNEMENTS'">
+            <span>Présence moyenne</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'INOUTCOME'">
+            <span>Revenue</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'INOUTCOME'">
+            <span>Dépense</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'INOUTCOME'">
+            <span>net Revenue/Dépense</span>
+          </th>
+          <th scope="col" *ngIf="formChange == 'INOUTCOME'">
+            <span>Revenue d'Abonnements</span>
+          </th>
+          <th
+            scope="col"
+            *ngIf="formChange == 'EMPLOYEE' || formChange == 'INOUTCOME'"
+          >
+            <span>Net</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td *ngIf="formChange == 'EMPLOYEE' || formChange == 'INOUTCOME'">
+            {{
+              checkSalary(
+                allEmployees
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}
+            dt
+          </td>
+          <td *ngIf="formChange == 'EMPLOYEE' || formChange == 'INOUTCOME'">
+            {{
+              checkAvance(
+                allEmployees
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}
+            dt
+          </td>
+          <td *ngIf="formChange == 'EMPLOYEE'">
+            {{
+              checkNumberOfAvance(
+                allEmployees
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}
+          </td>
+          <td *ngIf="formChange == 'TOUT'">
+            <button class="btn btn-debug" (click)="changeMoyDaily()">
+              {{ currentsearchEmployee }}
+            </button>
+          </td>
+          <td *ngIf="formChange == 'TOUT'">
+            <span *ngIf="!moyDaily">{{
+              checkMoyEntry(
+                allEmployees
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}</span>
+            <span *ngIf="moyDaily">
+              <span
+                *ngFor="
+                  let emp of allEmployees
+                    | statFilter
+                      : currentsearchDepartement
+                      : currentsearchYear
+                      : currentsearchMonth
+                      : currentsearchEmployee
+                "
+              >
+                <h4 *ngFor="let time of emp.entryHistory">
+                  {{ time.entryDate | date: "dd LLLL yyyy HH:mm" }}
+                </h4>
+              </span>
+            </span>
+          </td>
+          <td *ngIf="formChange == 'TOUT'">
+            <span *ngIf="!moyDaily">{{
+              checkMoyExit(
+                allEmployees
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}</span>
+            <span *ngIf="moyDaily">
+              <span
+                *ngFor="
+                  let emp of allEmployees
+                    | statFilter
+                      : currentsearchDepartement
+                      : currentsearchYear
+                      : currentsearchMonth
+                      : currentsearchEmployee
+                "
+              >
+                <h4 *ngFor="let time of emp.entryHistory">
+                  {{ time.exitDate | date: "dd LLLL yyyy HH:mm" }}
+                </h4>
+              </span>
+            </span>
+          </td>
+          <td *ngIf="formChange == 'TOUT' || formChange == 'EMPLOYEE'">
+            <span *ngIf="!moyDaily">{{
+              checkMoyRest(
+                allEmployees
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}</span>
+            <span *ngIf="moyDaily">
+              <span
+                *ngFor="
+                  let emp of allEmployees
+                    | statFilter
+                      : currentsearchDepartement
+                      : currentsearchYear
+                      : currentsearchMonth
+                      : currentsearchEmployee
+                "
+              >
+                <h4 *ngFor="let time of emp.entryHistory">
+                  {{ checktimeDep(time.entryDate, time.exitDate) }}
+                </h4>
+              </span>
+            </span>
+          </td>
+          <td *ngIf="formChange == 'ABONNEMENTS'">
+            {{
+              checkAbonnement(
+                allAbonnements
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}
+          </td>
+          <td *ngIf="formChange == 'ABONNEMENTS'">
+            {{
+              checkAbonne(
+                allAbonnements
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}
+          </td>
+          <td *ngIf="formChange == 'ABONNEMENTS'">
+            {{
+              checkPresence(
+                allAbonnements
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}
+          </td>
+          <td *ngIf="formChange == 'ABONNEMENTS'">
+            {{
+              checkMoyPresence(
+                allAbonnements
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}
+          </td>
+          <td *ngIf="formChange == 'INOUTCOME'">
+            {{
+              calcul(
+                allIncomes
+                  | customerFilter
+                    : currentsearchMonth
+                    : currentsearchYear
+                    : currentsearchDay
+              )
+            }}
+            dt
+          </td>
+          <td *ngIf="formChange == 'INOUTCOME'">
+            {{
+              calcul(
+                allOutcomes
+                  | customerFilter
+                    : currentsearchMonth
+                    : currentsearchYear
+                    : currentsearchDay
+              )
+            }}
+            dt
+          </td>
+          <td *ngIf="formChange == 'INOUTCOME'">
+            {{
+              calcul(
+                allIncomes
+                  | customerFilter
+                    : currentsearchMonth
+                    : currentsearchYear
+                    : currentsearchDay
+              ) -
+                calcul(
+                  allOutcomes
+                    | customerFilter
+                      : currentsearchMonth
+                      : currentsearchYear
+                      : currentsearchDay
+                )
+            }}
+            dt
+          </td>
+          <td *ngIf="formChange == 'INOUTCOME'">
+            {{
+              checkIncome(
+                allAbonnements
+                  | statFilter
+                    : currentsearchDepartement
+                    : currentsearchYear
+                    : currentsearchMonth
+                    : currentsearchEmployee
+              )
+            }}
+            dt
+          </td>
+          <td>
+            <span *ngIf="formChange == 'INOUTCOME'"
+              >{{
+                checkIncome(
+                  allAbonnements
+                    | statFilter
+                      : currentsearchDepartement
+                      : currentsearchYear
+                      : currentsearchMonth
+                      : currentsearchEmployee
+                ) -
+                  calcul(
+                    allOutcomes
+                      | customerFilter
+                        : currentsearchMonth
+                        : currentsearchYear
+                        : currentsearchDay
+                  )
+              }}
+              dt</span
+            >
+            <span *ngIf="formChange == 'EMPLOYEE'"
+              >{{
+                checkSalary(
+                  allEmployees
+                    | statFilter
+                      : currentsearchDepartement
+                      : currentsearchYear
+                      : currentsearchMonth
+                      : currentsearchEmployee
+                ) -
+                  checkAvance(
+                    allEmployees
+                      | statFilter
+                        : currentsearchDepartement
+                        : currentsearchYear
+                        : currentsearchMonth
+                        : currentsearchEmployee
+                  )
+              }}
+              dt</span
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

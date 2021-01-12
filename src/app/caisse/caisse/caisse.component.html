@@ -1,0 +1,294 @@
+<div class="container">
+  <h2 id="page-heading">
+    <span>Caisse</span>
+  </h2>
+
+  <div class="row">
+    <div class="col-sm-8">
+      <form name="searchForm" class="form-inline">
+        <div class="input-group w-100 mt-3">
+          <button
+            *ngIf="changeForm === ''"
+            style="width: 200px; margin-bottom: 2px"
+            type="submit"
+            (click)="change('search')"
+            class="btn btn-dark btn-sm"
+          >
+            <span class="d-none d-md-inline">
+              <span class="material-icons"> search </span>
+              Date d'abonnement
+            </span></button
+          ><br />
+          <button
+            *ngIf="changeForm === ''"
+            style="width: 200px; margin-bottom: 2px"
+            type="submit"
+            (click)="change('searchbyDate')"
+            class="btn btn-dark btn-sm"
+          >
+            <span class="d-none d-md-inline">
+              <span class="material-icons"> search </span>
+              Date de payement
+            </span>
+          </button>
+          <div *ngIf="changeForm === 'searchbyDate'" class="form-group">
+            <label class="form-control-label" for="date">Date</label>
+            <input
+              class="form-control"
+              type="date"
+              id="date"
+              name="date"
+              [(ngModel)]="searchDate"
+            />
+          </div>
+          <button
+            *ngIf="changeForm === 'search' || changeForm === 'searchbyDate'"
+            type="submit"
+            (click)="
+              change('');
+              currentsearchMonth = nowMonth;
+              currentsearchYear = nowYear;
+              currentsearchDay = nowDay;
+              searchByDate(null)
+            "
+            class="btn btn-dark btn-sm"
+          >
+            <span class="d-none d-md-inline">
+              <span class="material-icons"> search_off </span>
+            </span>
+          </button>
+          <div
+            class="row justify-content-center"
+            *ngIf="changeForm === 'search'"
+          >
+            <div class="col-4">
+              <form name="createForm" role="form">
+                <div class="form-group">
+                  <label class="form-control-label" for="year">Année</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    id="year"
+                    name="year"
+                    [(ngModel)]="currentsearchYear"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-control-label" for="month">Mois</label>
+                  <select
+                    class="form-control"
+                    name="month"
+                    [(ngModel)]="currentsearchMonth"
+                    id="month"
+                  >
+                    <option value="1">JANVIER</option>
+                    <option value="2">FEVRIER</option>
+                    <option value="3">MARS</option>
+                    <option value="4">AVRIL</option>
+                    <option value="5">MAI</option>
+                    <option value="6">JUIN</option>
+                    <option value="7">JUILLET</option>
+                    <option value="8">AOUT</option>
+                    <option value="9">SEPTEMBRE</option>
+                    <option value="10">OCTOBRE</option>
+                    <option value="11">NOVEMBRE</option>
+                    <option value="12">DECEMBRE</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-control-label" for="day">Jour</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    id="day"
+                    name="day"
+                    [(ngModel)]="currentsearchDay"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-4">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">
+              <span *ngIf="currentsearchDay !== 0">Entrée du jours</span>
+              <span *ngIf="currentsearchDay === 0">Entrée du mois</span>
+            </th>
+            <th scope="col">
+              <span *ngIf="currentsearchDay !== 0">Sortie du jours</span>
+              <span *ngIf="currentsearchDay === 0">Sortie du mois</span>
+            </th>
+            <th scope="col">
+              <span *ngIf="currentsearchDay !== 0">Etat du jours</span>
+              <span *ngIf="currentsearchDay === 0">Etat du mois</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              {{
+                calcul(
+                  allIncomes
+                    | customerFilter
+                      : currentsearchMonth
+                      : currentsearchYear
+                      : currentsearchDay
+                      : searchDate
+                )
+              }}
+              dt
+            </td>
+            <td>
+              {{
+                calcul(
+                  allOutcomes
+                    | customerFilter
+                      : currentsearchMonth
+                      : currentsearchYear
+                      : currentsearchDay
+                      : searchDate
+                )
+              }}
+              dt
+            </td>
+            <td>
+              {{
+                calcul(
+                  allIncomes
+                    | customerFilter
+                      : currentsearchMonth
+                      : currentsearchYear
+                      : currentsearchDay
+                      : searchDate
+                ) -
+                  calcul(
+                    allOutcomes
+                      | customerFilter
+                        : currentsearchMonth
+                        : currentsearchYear
+                        : currentsearchDay
+                        : searchDate
+                  )
+              }}
+              dt
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div
+    class="container-fluid row"
+    style="text-align: center; font-weight: 500"
+    id="entities"
+  >
+    <div class="col-6">
+      <h2>Entrée</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col"><span>Montant</span></th>
+            <th scope="col"><span>Date</span></th>
+            <th scope="col"><span>Acheteur</span></th>
+            <th scope="col"><span>Utilisateur</span></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let income of allIncomes
+                | customerFilter
+                  : currentsearchMonth
+                  : currentsearchYear
+                  : currentsearchDay
+                  : searchDate
+            "
+            style="cursor: pointer"
+            class="m-0"
+          >
+            <td>{{ income.amount }} dt</td>
+            <td>{{ income.date | date: "dd LLLL yyyy HH:mm" }}</td>
+            <td>{{ income.abonneName }}</td>
+            <td>{{ income.userName }}</td>
+            <td class="text-right">
+              <div class="btn-group">
+                <button
+                  *ngIf="
+                    userLogedIn.role === 'SUPERADMIN' ||
+                    userLogedIn.role === 'ADMIN'
+                  "
+                  type="button"
+                  (click)="deleteIncome(income.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <span class="d-none d-md-inline"
+                    ><span class="material-icons"> delete </span></span
+                  >
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-6">
+      <h2>Sortie</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col"><span>Montant</span></th>
+            <th scope="col"><span>Date</span></th>
+            <th scope="col"><span>Utilisateur</span></th>
+            <th scope="col"><span>Déscription</span></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let outcome of allOutcomes
+                | customerFilter
+                  : currentsearchMonth
+                  : currentsearchYear
+                  : currentsearchDay
+                  : searchDate
+            "
+            style="cursor: pointer"
+            class="m-0"
+          >
+            <td>{{ outcome.amount }} dt</td>
+            <td>{{ outcome.date | date: "dd LLLL yyyy HH:mm" }}</td>
+            <td>{{ outcome.userName }}</td>
+            <td>{{ outcome.description + " pour " + outcome.employee }}</td>
+            <td class="text-right">
+              <div class="btn-group">
+                <button
+                  *ngIf="
+                    userLogedIn.role === 'SUPERADMIN' ||
+                    userLogedIn.role === 'ADMIN'
+                  "
+                  type="button"
+                  (click)="deleteOutcome(outcome.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <span class="d-none d-md-inline"
+                    ><span class="material-icons"> delete </span></span
+                  >
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

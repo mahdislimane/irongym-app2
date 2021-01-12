@@ -1,0 +1,36 @@
+<div class="row justify-content-center pt-5">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <form [formGroup]="loginForm" class="p-3">
+      <div class="form-group">
+        <label for="login">Login</label>
+        <input
+          type="text"
+          formControlName="login"
+          name="login"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          formControlName="password"
+          name="password"
+          class="form-control"
+        />
+      </div>
+      <div class="text-center">
+        <button
+          [disabled]="loginForm.invalid"
+          class="btn btn-success"
+          type="button"
+          (click)="login()"
+        >
+          login
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="col-4"></div>
+</div>

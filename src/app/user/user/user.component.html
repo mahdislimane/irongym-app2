@@ -1,0 +1,149 @@
+<div class="container">
+  <h2 id="page-heading" class="row">
+    <div class="col-4">
+      <span>Utilisateurs</span>
+    </div>
+    <div class="col-4">
+      <form name="createForm" role="form">
+        <div class="form-group">
+          <label class="form-control-label" for="year1">Année</label>
+          <input
+            class="form-control"
+            type="number"
+            id="year1"
+            name="year1"
+            [(ngModel)]="currentsearchYear"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-control-label" for="month1">Mois</label>
+          <select
+            class="form-control"
+            name="month1"
+            [(ngModel)]="currentsearchMonth"
+            id="month1"
+          >
+            <option value="1">JANVIER</option>
+            <option value="2">FEVRIER</option>
+            <option value="3">MARS</option>
+            <option value="4">AVRIL</option>
+            <option value="5">MAI</option>
+            <option value="6">JUIN</option>
+            <option value="7">JUILLET</option>
+            <option value="8">AOUT</option>
+            <option value="9">SEPTEMBRE</option>
+            <option value="10">OCTOBRE</option>
+            <option value="11">NOVEMBRE</option>
+            <option value="12">DECEMBRE</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="col-4">
+      <button
+        id="jh-create-entity"
+        class="btn btn-primary float-right jh-create-entity create-abonnement"
+        [routerLink]="['/createuser']"
+      >
+        <span class="hidden-sm-down"> Crée un utilisateur </span>
+      </button>
+    </div>
+  </h2>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <form name="searchForm" class="form-inline">
+        <div class="input-group w-100 mt-3">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="currentsearch"
+            id="currentSearch"
+            name="currentSearch"
+            placeholder="search..."
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    class="table-responsive"
+    id="entities"
+    style="text-align: center; font-weight: 500"
+  >
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>LOG</span></th>
+          <th scope="col"><span>Name</span></th>
+          <th scope="col"><span>email</span></th>
+          <th scope="col"><span>role</span></th>
+          <th scope="col"><span>date</span></th>
+          <th scope="col"><span>Historique</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of allUser | customerFilter: currentsearch">
+          <td>
+            <div *ngIf="user.connexionHistory[0]">
+              <span
+                *ngIf="
+                  user.connexionHistory[user.connexionHistory.length - 1]
+                    .LogoutDate === null
+                "
+                class="btn btn-success"
+              ></span>
+            </div>
+          </td>
+          <td>{{ user.firstName + user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>{{ user.date | date: "dd LLLL yyyy" }}</td>
+          <td *ngIf="user.connexionHistory">
+            <div
+              style="overflow-y: auto; overflow-x: hidden; max-height: 100px"
+            >
+              <div *ngFor="let his of user.connexionHistory">
+                <span *ngIf="checkDate(his.LoginDate)">
+                  {{ his.LoginDate | date: "dd LLLL yyyy HH:mm" }} -{{
+                    his.essai
+                  }}-></span
+                >
+                <span *ngIf="checkDate(his.LoginDate)">
+                  {{ his.LogoutDate | date: "dd LLLL yyyy HH:mm" }}
+                </span>
+              </div>
+            </div>
+          </td>
+
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="button"
+                [routerLink]="['/updateuser', user.id]"
+                class="btn btn-primary btn-sm"
+              >
+                <span class="d-none d-md-inline"
+                  ><span class="material-icons"> edit </span></span
+                >
+              </button>
+
+              <button
+                [disabled]="user.role === 'SUPERADMIN'"
+                type="submit"
+                (click)="deleteUser(user.id)"
+                class="btn btn-danger btn-sm"
+              >
+                <span class="d-none d-md-inline"
+                  ><span class="material-icons"> delete </span></span
+                >
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

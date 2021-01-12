@@ -1,0 +1,222 @@
+<div class="container">
+  <h2 id="page-heading">
+    <span>Employées</span>
+
+    <button
+      *ngIf="userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'"
+      id="jh-create-entity"
+      class="btn btn-primary float-right jh-create-entity create-abonnement"
+      [routerLink]="['/employeecreate']"
+    >
+      <span class="hidden-sm-down"> Ajouté un employée </span>
+    </button>
+  </h2>
+  <div
+    *ngIf="userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'"
+  >
+    <p class="p-0 m-0">
+      Nombre d'employées :
+      {{ abLength(allEmployees | customerFilter: currentsearch:searchUser) }}
+    </p>
+    <p class="p-0 m-0">
+      Salaires totaux :
+      {{ abCredit(allEmployees | customerFilter: currentsearch:searchUser) }} dt
+    </p>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <form name="searchForm" class="form-inline">
+        <div class="input-group w-100 mt-3">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="currentsearch"
+            id="currentSearch"
+            name="currentSearch"
+            placeholder="search..."
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    class="table-responsive"
+    style="text-align: center; font-weight: 500"
+    id="entities"
+  >
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>fullName</span></th>
+          <th
+            scope="col"
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            <span>jobTitle</span>
+          </th>
+          <th scope="col"><span>phoneNumber</span></th>
+          <th
+            scope="col"
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            <span>cin</span>
+          </th>
+          <th
+            scope="col"
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            <span>startDate</span>
+          </th>
+          <th
+            scope="col"
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            <span>endDate</span>
+          </th>
+          <th scope="col"><span>Rest</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let employee of allEmployees | customerFilter: currentsearch"
+          style="cursor: pointer"
+          class="m-0"
+        >
+          <td>{{ employee.fullName | uppercase }}</td>
+          <td
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            {{ employee.jobTitle }}
+          </td>
+          <td>{{ employee.phoneNumber }}</td>
+          <td
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            {{ employee.cin }}
+          </td>
+          <td
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            {{ employee.startDate | date: "dd LLLL yyyy" }}
+          </td>
+          <td
+            *ngIf="
+              userLogedIn.role === 'SUPERADMIN' || userLogedIn.role === 'ADMIN'
+            "
+          >
+            <div *ngIf="employee.endDate != '0000-00-00 00:00:00'">
+              {{ employee.endDate | date: "dd LLLL yyyy" }}
+            </div>
+          </td>
+          <td>{{ employee.rest }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <div *ngIf="changeForm === employee.id" class="row">
+                <div class="col-9" style="text-align: center">
+                  <input
+                    placeholder="Montant"
+                    type="number"
+                    [(ngModel)]="payToAdd"
+                    style="max-width: 100px"
+                  />
+                  <input
+                    placeholder="Remarque"
+                    type="text"
+                    [(ngModel)]="theDescription"
+                    style="max-width: 100px"
+                  />
+                </div>
+                <div class="col-3">
+                  <button
+                    type="submit"
+                    (click)="addAvance(employee)"
+                    class="btn btn-success btn-sm"
+                  >
+                    <span class="d-none d-md-inline"
+                      ><span class="material-icons"> check </span></span
+                    >
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="changeForm === '' || changeForm !== employee.id">
+                <button
+                  *ngIf="employee.salarys !== []"
+                  type="submit"
+                  (click)="change(employee.id)"
+                  class="btn btn-success btn-sm"
+                >
+                  <span class="d-none d-md-inline"
+                    ><span class="material-icons"> monetization_on </span></span
+                  >
+                </button>
+              </div>
+              <div
+                *ngIf="
+                  userLogedIn.role === 'SUPERADMIN' ||
+                  userLogedIn.role === 'ADMIN'
+                "
+              >
+                <button
+                  type="button"
+                  [routerLink]="['/employeedetail/' + employee.id]"
+                  class="btn btn-info btn-sm"
+                >
+                  <span class="material-icons d-none d-md-inline">
+                    pageview
+                  </span>
+                </button>
+              </div>
+
+              <div
+                *ngIf="
+                  userLogedIn.role === 'SUPERADMIN' ||
+                  userLogedIn.role === 'ADMIN'
+                "
+              >
+                <button
+                  type="button"
+                  [routerLink]="['/employeeupdate', employee.id]"
+                  class="btn btn-primary btn-sm"
+                >
+                  <span class="material-icons d-none d-md-inline"> edit </span>
+                </button>
+              </div>
+              <div
+                *ngIf="
+                  userLogedIn.role === 'SUPERADMIN' ||
+                  userLogedIn.role === 'ADMIN'
+                "
+              >
+                <button
+                  type="button"
+                  (click)="deleteEmployee(employee.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <span class="material-icons d-none d-md-inline">
+                    delete
+                  </span>
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

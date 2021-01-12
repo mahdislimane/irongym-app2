@@ -1,0 +1,202 @@
+<div class="container" *ngIf="currentAbonne">
+  <h2 id="page-heading" style="text-align: center">
+    <button
+      id="jh-create-entity"
+      class="btn btn-info float-left"
+      [routerLink]="['/abonne']"
+    >
+      <span class="hidden-sm-down"> Retour </span>
+    </button>
+    <span> {{ currentAbonne.firstName + " " + currentAbonne.lastName }} </span>
+
+    <button
+      id="jh-create-entity"
+      class="btn btn-primary float-right"
+      [routerLink]="['/addabonnement/' + currentAbonne.id]"
+    >
+      <span class="hidden-sm-down"> Ajouté un abonnement </span>
+    </button>
+  </h2>
+
+  <div
+    class="table-responsive"
+    id="entities"
+    style="text-align: center; font-weight: 500"
+  >
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>departement</span></th>
+          <th scope="col"><span>abType</span></th>
+          <th scope="col"><span>price</span></th>
+          <th scope="col"><span>pay</span></th>
+          <th scope="col"><span>date</span></th>
+          <th scope="col"><span>Présence</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let abonnement of allAbonnements; let i = index"
+          style="cursor: pointer"
+          class="m-0"
+        >
+          <td
+            *ngIf="
+              (userLogedIn.role === 'USER' && allAbonnements.length - i < 6) ||
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN'
+            "
+          >
+            {{ abonnement.departement }}
+          </td>
+          <td
+            *ngIf="
+              (userLogedIn.role === 'USER' && allAbonnements.length - i < 6) ||
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN'
+            "
+          >
+            {{ abonnement.abType }}
+          </td>
+          <td
+            *ngIf="
+              (userLogedIn.role === 'USER' && allAbonnements.length - i < 6) ||
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN'
+            "
+          >
+            {{ abonnement.price }}
+          </td>
+          <td
+            *ngIf="
+              (userLogedIn.role === 'USER' && allAbonnements.length - i < 6) ||
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN'
+            "
+          >
+            {{ abonnement.pay }}
+          </td>
+          <td
+            *ngIf="
+              (userLogedIn.role === 'USER' && allAbonnements.length - i < 6) ||
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN'
+            "
+          >
+            {{ abonnement.date | date: "dd LLLL yyyy HH:mm" }}
+          </td>
+          <td
+            *ngIf="
+              (userLogedIn.role === 'USER' && allAbonnements.length - i < 6) ||
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN'
+            "
+          >
+            <div
+              style="overflow: auto; max-height: 100px"
+              *ngIf="abonnement?.presences && abonnement?.presences?.length > 0"
+            >
+              <div
+                *ngFor="let presence of abonnement?.presences"
+                class="p-1 container row"
+              >
+                <div
+                  [ngClass]="
+                    userLogedIn.role === 'SUPERADMIN' ||
+                    userLogedIn.role === 'ADMIN'
+                      ? 'col-8'
+                      : 'col-12'
+                  "
+                >
+                  <span> {{ presence.date | date: "dd LLLL yyyy HH:mm" }} </span
+                  ><br />
+                  <span>
+                    {{ presence.userLogued }}
+                  </span>
+                </div>
+                <div
+                  [ngClass]="userLogedIn.role === 'ADMIN' && 'col-4'"
+                  *ngIf="
+                    userLogedIn.role === 'SUPERADMIN' ||
+                    userLogedIn.role === 'ADMIN'
+                  "
+                >
+                  <button
+                    type="submit"
+                    (click)="
+                      deletePresence(
+                        currentAbonne.id,
+                        abonnement.id,
+                        presence.id
+                      )
+                    "
+                    class="btn btn-danger btn-sm"
+                  >
+                    <span class="d-none d-md-inline">
+                      <span class="material-icons"> delete_forever </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td
+            *ngIf="
+              (userLogedIn.role === 'USER' && allAbonnements.length - i < 6) ||
+              userLogedIn.role === 'SUPERADMIN' ||
+              userLogedIn.role === 'ADMIN'
+            "
+            class="text-right"
+          >
+            <div class="btn-group">
+              <div *ngIf="changeForm === abonnement.id">
+                <input
+                  type="number"
+                  [(ngModel)]="payToAdd"
+                  style="max-width: 50px"
+                />
+                <button
+                  *ngIf="abonnement.price > abonnement.pay"
+                  type="submit"
+                  (click)="addPay(currentAbonne.id, abonnement.id)"
+                  class="btn btn-success btn-sm"
+                >
+                  <span class="d-none d-md-inline"
+                    ><span class="material-icons"> check </span></span
+                  >
+                </button>
+              </div>
+              <div *ngIf="changeForm === '' || changeForm !== abonnement.id">
+                <button
+                  *ngIf="abonnement.price > abonnement.pay"
+                  type="submit"
+                  (click)="change(abonnement.id)"
+                  class="btn btn-success btn-sm"
+                >
+                  <span class="d-none d-md-inline">Payée un crédit</span>
+                </button>
+              </div>
+              <div
+                *ngIf="
+                  userLogedIn.role === 'SUPERADMIN' ||
+                  userLogedIn.role === 'ADMIN'
+                "
+              >
+                <button
+                  type="submit"
+                  (click)="deleteAbonnement(currentAbonne.id, abonnement.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <span class="d-none d-md-inline"
+                    ><span class="material-icons"> delete </span></span
+                  >
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

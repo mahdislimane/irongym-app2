@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="col-12">
+    <h2 id="page-heading">Statistiques</h2>
+    <div class="m-3">
+      <div class="float-left">
+        <button
+          class="btn btn-dark"
+          style="width: 200px; margin-bottom: 2px"
+          (click)="changeform('TOUT')"
+        >
+          Afficher
+        </button>
+      </div>
+      <div class="col-4 float-right">
+        <form>
+          <div class="form-group container-fluid row">
+            <label class="form-control-label col-4" for="year">Année</label>
+            <input
+              class="form-control col-8"
+              type="number"
+              id="year"
+              name="year"
+              [(ngModel)]="currentsearchYear"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row col-12">
+    <div class="col-6" id="TOUT"></div>
+    <div class="col-6" id="INOUTCOME"></div>
+    <div class="col-6" id="ABONNEMENTS"></div>
+    <div class="col-6" id="EMPLOYEE"></div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form
+      name="createForm"
+      role="form"
+      novalidate
+      (ngSubmit)="save()"
+      [formGroup]="createForm"
+    >
+      <h2 id="jhi-abonnement-heading">Modifié un abonné</h2>
+
+      <div>
+        <div class="form-group">
+          <label class="form-control-label" for="field_lastName">Nom</label>
+          <input
+            class="form-control"
+            id="field_lastName"
+            name="lastName"
+            formControlName="lastName"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-control-label" for="field_firstName">Prénom</label>
+          <input
+            class="form-control"
+            id="field_firstName"
+            name="firstName"
+            formControlName="firstName"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-control-label" for="field_phoneNumber"
+            >Numéro de téléphone</label
+          >
+          <input
+            class="form-control"
+            id="field_phoneNumber"
+            name="phoneNumber"
+            formControlName="phoneNumber"
+          />
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="button"
+          [routerLink]="['/abonne']"
+          id="cancel-save"
+          class="btn btn-secondary"
+        >
+          <span class="material-icons">backspace</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          [disabled]="createForm.invalid"
+          class="btn btn-primary"
+        >
+          <span class="material-icons">save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
