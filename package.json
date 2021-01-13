@@ -15,8 +15,8 @@
     "server": "nodemon server.js",
     "client": "npm building",
     "clientinstall": "npm install --prefix gymapp",
-    "runapp": "concurrently \"npm run server\" \"ng serve\"",
-    "build": "concurrently \"npm run server\" \"ng build\"",
+    "runapp": "concurrently \"npm run server\" \"npm run start\"",
+    "build": "concurrently \"npm run server\" \"npm run building\"",
     "heroku-build": "concurrently \"npm run server\" \"npm run client\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
