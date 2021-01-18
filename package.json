@@ -7,8 +7,8 @@
   "main": "server.js",
   "scripts": {
     "ng": "ng",
-    "start": "node server.js",
-    "build": "ng build",
+    "start": "ng serve",
+    "building": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -16,7 +16,7 @@
     "client": "npm building",
     "clientinstall": "npm install --prefix gymapp",
     "runapp": "concurrently \"npm run server\" \"npm run start\"",
-    "building": "concurrently \"npm run server\" \"npm run building\"",
+    "build": "concurrently \"npm run server\" \"npm run building\"",
     "heroku-build": "concurrently \"npm run server\" \"npm run client\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"

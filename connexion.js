@@ -1,10 +1,10 @@
 const sql = require("mysql");
 
 const db = sql.createConnection({
-  user: "root", //default is sa
-  password: "",
-  server: "localhost", // for local machine
-  database: "irongymdb", // name of database
+  user: "223697_Mahdi", //default is sa
+  password: "Mahdi1234",
+  server: "mysql-mahdislimane.alwaysdata.net", // for local machine
+  database: "mahdislimane_irongymdb", // name of database
   options: {
     encrypt: true,
     enableArithAbort: true,
