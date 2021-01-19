@@ -1,6 +1,6 @@
 const express = require("express");
-const app = express();
 const path = require("path");
+const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./connexion");
@@ -20,11 +20,12 @@ app.use("/api/abonne", require("./routes/Abonne"));
 app.use("/api/employee", require("./routes/employee"));
 app.use("/api/caisse", require("./routes/caisse"));
 app.use("/api/buvette", require("./routes/buvette"));
-app.use(express.static(__dirname + "/dist/ironapp"));
 
+app.use(express.static(__dirname + "dist/irongym-app2"));
 app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/dist/ironapp/index.html"));
+  res.sendFile(path.join(__dirname + "dist/irongym-app2/index.html"));
 });
+
 let port = process.env.PORT || 5000;
 app.listen(port, (err, data) => {
   if (err) throw err;
